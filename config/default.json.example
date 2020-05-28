@@ -3,7 +3,7 @@
         "token" : "BOT_TOKEN"
     },
     "osu": {
-        "api_token" : "osu_api_token"
+        "api_key" : "osu_api_key"
     },
     "db": {
         "type": "mysql",

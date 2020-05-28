@@ -5,6 +5,7 @@ const readline = require('readline');
 
 const DataManager = require('./src/DataManager');
 const CommandHandler = require('./src/Command/CommandHandler');
+const NotifMessage = require('./src/NotifMessage');
 
 let dm = new DataManager();
 
@@ -37,6 +38,9 @@ const usercommand = async (command) => {
     case "db":
       await dm.test();
       break;
+    case "test":
+      await sendNotif(347650, false, true);
+      break;
     default:
       console.log("Unknown command. Type 'help' for a list of commands.");
   }
@@ -49,10 +53,57 @@ const usercommand = async (command) => {
   }
 }
 
+const sendNotif = async (nextPush, loved = false, test = false) => {
+  let notifMessage = new NotifMessage();
+
+  await notifMessage.init(dm,nextPush);
+
+  dm.getTrackedChannels(loved, test).then( (channels) => {
+    for(let i = 0; i < channels.length; i++) {
+      notifChannel(notifMessage, channels[i]);
+    }
+  });
+}
+
+const notifChannel = async (notifMessage, channel) => {
+  let notif = new NotifMessage();
+  notif.import(notifMessage);
+  notif.setForChannel(channel);
+  
+  client.channels.fetch(channel["channel"]).then( (disc_channel) => {
+
+    disc_channel.send(notif.embed).catch( (e) => {
+      console.log("Failed to notify channel, "+e);
+    });
+
+  }).catch( (e) => {
+    console.log("Could not notify "+channel["channel"]+", "+e);
+  });
+  
+}
+
+const rankedcheck = async () => {
+  await dm.checkRankedBeatmap().then((nextPush) => {
+      if (nextPush) {
+          //await dm.deleteRankedBeatmapQueue(nextPush);
+          sendNotif(nextPush, false, true);
+      }
+  });
+
+  await dm.checkLovedBeatmap().then((nextLovedPush) => {
+    if (nextLovedPush) {
+        //await dm.deleteLovedBeatmapQueue(nextLovedPush);
+        sendNotif(nextLovedPush, true, true);
+    }
+  });
+}
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 
   userconsole.question('> ', usercommand);
+
+  //setTimeout(rankedcheck,5000);
 });
 
 client.on('message', msg => {
@@ -61,3 +112,4 @@ client.on('message', msg => {
 });
 
 client.login(token);
+

@@ -15,8 +15,14 @@ class CommandHandler {
     defineCommand(instruction) {
         let ret;
         switch (instruction) {
+            case "help":
+                ret = new Commands.Help();
+                break;
             case "add":
                 ret = new Commands.Add();
+                break;
+            case "remove":
+                ret = new Commands.Remove();
                 break;
             default:
                 ret = new Commands.Undefined();

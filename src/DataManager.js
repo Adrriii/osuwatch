@@ -28,21 +28,40 @@ class DataManager {
 
     }
 
-    async addTrackedChannel(channel_id) {  
-        let ret = false;  
-        let res1 = undefined; 
-       
+    async isChannelTracked(channel_id) {
+        let tracked = false;
+
         await DataManager.database.fast("SELECT * FROM watch_channels WHERE channel=?",[channel_id]).then(
             (res) => {
-                res1 = res;
+                tracked = res.length > 0;
             }
         );
+
+        return tracked;
+    }
+
+    async addTrackedChannel(channel_id) {
+        let ret = false;  
         
-        // Check if already tracked
-        if(res1 == undefined || res1.length == 0) {
-            await DataManager.database.fast("INSERT INTO watch_channels (channel) VALUES (?)", [channel_id]);
-            ret = true;
-        }
+        await this.isChannelTracked(channel_id).then( async (tracked) => {
+            if(!tracked) {
+                await DataManager.database.fast("INSERT INTO watch_channels (channel) VALUES (?)", [channel_id]);
+                ret = true;
+            }
+        });
+
+        return ret;
+    }
+
+    async removeTrackedChannel(channel_id) {
+        let ret = false;  
+        
+        await this.isChannelTracked(channel_id).then( async (tracked) => {
+            if(tracked) {
+                await DataManager.database.fast("DELETE FROM watch_channels WHERE channel=?", [channel_id]);
+                ret = true;
+            }
+        });
 
         return ret;
     }

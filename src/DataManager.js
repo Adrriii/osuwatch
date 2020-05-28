@@ -126,6 +126,10 @@ class DataManager {
         );
         return channel;
     }
+    
+    trackModeChannel(channel_id,mode,state) {
+        DataManager.database.fast("UPDATE watch_channels SET "+mode+"=? WHERE channel=?",[state,channel_id]);
+    }
 
 }
 

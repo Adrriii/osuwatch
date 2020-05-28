@@ -36,6 +36,12 @@ class CommandHandler {
             case "trackedmodes":
                 ret = new Commands.TrackedModes();
                 break;
+            case "addmode":
+                ret = new Commands.AddMode();
+                break;
+            case "rmmode":
+                ret = new Commands.RemoveMode();
+                break;
             default:
                 ret = new Commands.Undefined();
         }

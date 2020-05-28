@@ -4,7 +4,7 @@ const Command = require("../Command.js");
 
 class Undefined extends Command {
     
-    async perform(msg) {
+    async perform(msg, args) {
         this.reply(msg, "Undefined command");
     }
 

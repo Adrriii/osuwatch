@@ -4,7 +4,7 @@ const Command = require("../Command.js");
 
 class Add extends Command {
     
-    async perform(msg){
+    async perform(msg, args){
         let channel     = msg.channel;
         let channel_id  = channel.id;
 

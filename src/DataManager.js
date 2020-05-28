@@ -104,6 +104,19 @@ class DataManager {
         return ret;
     }
 
+    async setLanguage(channel_id, val) {
+        let ret = false;  
+        
+        await this.isChannelTracked(channel_id).then( async (tracked) => {
+            if(tracked) {
+                await DataManager.database.fast("UPDATE watch_channels SET language=? WHERE channel=?", [val, channel_id]);
+                ret = true;
+            }
+        });
+
+        return ret;
+    }
+
 }
 
 module.exports = DataManager;

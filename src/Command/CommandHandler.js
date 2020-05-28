@@ -30,6 +30,9 @@ class CommandHandler {
             case "removeloved":
                 ret = new Commands.RemoveLoved();
                 break;
+            case "setlang":
+                ret = new Commands.SetLanguage();
+                break;
             default:
                 ret = new Commands.Undefined();
         }
@@ -82,7 +85,7 @@ class CommandHandler {
 
             // Only run the command if user is admin or command doesn't need it
             if (!command.requires_admin() || this.userIsAdmin(message)) {
-                await command.perform(message);
+                await command.perform(message, this.getArgs(message.content));
             }
         }
     }

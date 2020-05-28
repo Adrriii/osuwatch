@@ -4,7 +4,7 @@ const Command = require("../Command.js");
 
 class Help extends Command {
     
-    async perform(msg){
+    async perform(msg, args){
         this.reply(msg,"Welcome !\nTo receive notifications about new ranked maps on a channel, just type `ow add` in it !\n**All modes are enabled by default.**\n\nList of commands :"
         + "\n`ow add` Enable notifications on a channel"
         + "\n`ow remove` Disable notifications on a channel"

@@ -1,4 +1,7 @@
 {
+    "config": {
+        "env" : "test"
+    },
     "Discord": {
         "token" : "BOT_TOKEN"
     },

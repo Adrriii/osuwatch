@@ -9,7 +9,7 @@ const NotifMessage = require('./src/NotifMessage');
 
 let dm = new DataManager();
 
-let TEST = false;
+let TEST = config.has("config.env") && config.get("config.env") != "prod"; // test unless prod
 let running = true;
 
 const userconsole = readline.createInterface({
@@ -104,7 +104,7 @@ const rankedcheck = async () => {
 }
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log("Logged in as "+client.user.tag + ((!TEST) ? " in PRODUCTION mode !" : " in test mode"));
 
   userconsole.question('> ', usercommand);
 

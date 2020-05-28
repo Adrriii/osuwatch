@@ -42,6 +42,9 @@ class CommandHandler {
             case "rmmode":
                 ret = new Commands.RemoveMode();
                 break;
+            case "setutc":
+                ret = new Commands.SetUTC();
+                break;
             default:
                 ret = new Commands.Undefined();
         }

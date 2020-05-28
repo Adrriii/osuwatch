@@ -117,6 +117,19 @@ class DataManager {
         return ret;
     }
 
+    async setUTC(channel_id, val) {
+        let ret = false;  
+        
+        await this.isChannelTracked(channel_id).then( async (tracked) => {
+            if(tracked) {
+                await DataManager.database.fast("UPDATE watch_channels SET utc=? WHERE channel=?", [val, channel_id]);
+                ret = true;
+            }
+        });
+
+        return ret;
+    }
+
     async getChannel(channel_id) {
         let channel;
         await DataManager.database.fast("SELECT * FROM watch_channels WHERE channel=?",[channel_id]).then(

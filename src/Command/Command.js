@@ -21,7 +21,7 @@ class Command {
     }
 
     // The method defining the behavior of the command
-    perform(msg) {
+    async perform(msg) {
         throw new Error('Unimplemented method');
     }
 

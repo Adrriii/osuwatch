@@ -40,6 +40,18 @@ class DataManager {
         return tracked;
     }
 
+    async isChannelTrackedLoved(channel_id) {
+        let tracked = false;
+
+        await DataManager.database.fast("SELECT * FROM watch_channels WHERE channel=? AND loved=1",[channel_id]).then(
+            (res) => {
+                tracked = res.length > 0;
+            }
+        );
+
+        return tracked;
+    }
+
     async addTrackedChannel(channel_id) {
         let ret = false;  
         
@@ -53,12 +65,38 @@ class DataManager {
         return ret;
     }
 
+    async addTrackedChannelLoved(channel_id) {
+        let ret = false;  
+        
+        await this.isChannelTrackedLoved(channel_id).then( async (tracked) => {
+            if(!tracked) {
+                await DataManager.database.fast("UPDATE watch_channels SET loved=1 WHERE channel=?", [channel_id]);
+                ret = true;
+            }
+        });
+
+        return ret;
+    }
+
     async removeTrackedChannel(channel_id) {
         let ret = false;  
         
         await this.isChannelTracked(channel_id).then( async (tracked) => {
             if(tracked) {
                 await DataManager.database.fast("DELETE FROM watch_channels WHERE channel=?", [channel_id]);
+                ret = true;
+            }
+        });
+
+        return ret;
+    }
+
+    async removeTrackedChannelLoved(channel_id) {
+        let ret = false;  
+        
+        await this.isChannelTrackedLoved(channel_id).then( async (tracked) => {
+            if(tracked) {
+                await DataManager.database.fast("UPDATE watch_channels SET loved=0 WHERE channel=?", [channel_id]);
                 ret = true;
             }
         });

@@ -24,6 +24,12 @@ class CommandHandler {
             case "remove":
                 ret = new Commands.Remove();
                 break;
+            case "loved":
+                ret = new Commands.AddLoved();
+                break;
+            case "removeloved":
+                ret = new Commands.RemoveLoved();
+                break;
             default:
                 ret = new Commands.Undefined();
         }
@@ -70,13 +76,13 @@ class CommandHandler {
     }
 
     // Performs the eventual command contained by a message
-    handleCommand(message) {
+    async handleCommand(message) {
         if (this.isCommand(message)) {
             let command = this.defineCommand(this.getInstruction(message.content));
 
             // Only run the command if user is admin or command doesn't need it
             if (!command.requires_admin() || this.userIsAdmin(message)) {
-                command.perform(message);
+                await command.perform(message);
             }
         }
     }

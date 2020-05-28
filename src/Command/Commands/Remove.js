@@ -4,7 +4,7 @@ const Command = require("../Command.js");
 
 class Remove extends Command {
     
-    perform(msg){
+    async perform(msg){
         let channel     = msg.channel;
         let channel_id  = channel.id;
 

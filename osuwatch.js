@@ -9,7 +9,7 @@ const NotifMessage = require('./src/NotifMessage');
 
 let dm = new DataManager();
 
-let TEST = true;
+let TEST = false;
 let running = true;
 
 const userconsole = readline.createInterface({

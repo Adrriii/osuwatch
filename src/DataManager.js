@@ -117,6 +117,16 @@ class DataManager {
         return ret;
     }
 
+    async getChannel(channel_id) {
+        let channel;
+        await DataManager.database.fast("SELECT * FROM watch_channels WHERE channel=?",[channel_id]).then(
+            (res) => {
+                channel = res[0];
+            }
+        );
+        return channel;
+    }
+
 }
 
 module.exports = DataManager;

@@ -33,6 +33,9 @@ class CommandHandler {
             case "setlang":
                 ret = new Commands.SetLanguage();
                 break;
+            case "trackedmodes":
+                ret = new Commands.TrackedModes();
+                break;
             default:
                 ret = new Commands.Undefined();
         }

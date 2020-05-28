@@ -1,0 +1,26 @@
+{
+  "name": "osuwatch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "osuwatch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node osuwatch.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Adrriii/osuwatch.git"
+  },
+  "author": "Adri",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/Adrriii/osuwatch/issues"
+  },
+  "homepage": "https://github.com/Adrriii/osuwatch#readme",
+  "dependencies": {
+    "bufferutil": "^4.0.1",
+    "config": "^3.3.1",
+    "discord.js": "^12.2.0",
+    "utf-8-validate": "^5.0.2"
+  }
+}

@@ -1,5 +1,15 @@
 {
     "Discord": {
         "token" : "BOT_TOKEN"
+    },
+    "osu": {
+        "api_token" : "osu_api_token"
+    },
+    "db": {
+        "type": "mysql",
+        "host": "localhost",
+        "dbname": "db_name",
+        "user": "db_user", 
+        "pass": "db_pass"
     }
 }

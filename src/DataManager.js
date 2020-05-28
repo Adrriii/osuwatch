@@ -18,6 +18,7 @@ class DataManager {
        
        await DataManager.database.fast("SELECT * FROM osu_announce").then(
            (res) => {
+                if(res == undefined) return;
                 if(res.length >= 1) {
                     console.log("Database is online");
                 } else {
@@ -33,6 +34,7 @@ class DataManager {
 
         await DataManager.database.fast("SELECT * FROM watch_channels WHERE channel=?",[channel_id]).then(
             (res) => {
+                if(res == undefined) return;
                 tracked = res.length > 0;
             }
         );
@@ -45,6 +47,7 @@ class DataManager {
 
         await DataManager.database.fast("SELECT * FROM watch_channels WHERE channel=? AND loved=1",[channel_id]).then(
             (res) => {
+                if(res == undefined) return;
                 tracked = res.length > 0;
             }
         );
@@ -134,6 +137,7 @@ class DataManager {
         let channel;
         await DataManager.database.fast("SELECT * FROM watch_channels WHERE channel=?",[channel_id]).then(
             (res) => {
+                if(res == undefined) return;
                 channel = res[0];
             }
         );
@@ -143,9 +147,10 @@ class DataManager {
     
     async checkRankedBeatmap() {
         let map;
-        await DataManager.database.fast("SELECT MIN(beatmapset_id) FROM watch_unpushedBeatmapSets").then(
+        await DataManager.database.fast("SELECT MIN(beatmapset_id) as res FROM watch_unpushedBeatmapSets").then(
             (res) => {
-                map = res[0][0];
+                if(res == undefined) return;
+                map = res[0]["res"];
             }
         );
         return map;
@@ -153,9 +158,10 @@ class DataManager {
 
     async checkLovedBeatmap() {
         let map;
-        await DataManager.database.fast("SELECT MIN(beatmapset_id) FROM watch_unpushedBeatmapSetsLoved").then(
+        await DataManager.database.fast("SELECT MIN(beatmapset_id) as res FROM watch_unpushedBeatmapSetsLoved").then(
             (res) => {
-                map = res[0][0];
+                if(res == undefined) return;
+                map = res[0]["res"];
             }
         );
         return map;
@@ -178,9 +184,16 @@ class DataManager {
 
         await DataManager.database.fast("SELECT * FROM osu_allbeatmaps WHERE beatmapset_id=? ORDER BY mode,difficultyrating DESC",[beatmapset_id]).then(
             (res) => {
-                beatmaps = res;
+                if(res == undefined) return;
+                if(res[0].beatmapset_id == beatmapset_id)
+                    beatmaps = res;
             }
         );
+
+        if(beatmaps == undefined) {
+            console.log("Couldn't get beatmap");
+        }
+        
         return beatmaps;
     }
     
@@ -200,6 +213,7 @@ class DataManager {
 
         await DataManager.database.fast("SELECT CONVERT(channel USING utf8) as channel, std, taiko, ctb, mania, language, utc, color, test, loved, keyfilter FROM watch_channels"+ cond).then(
             (res) => {
+                if(res == undefined) return;
                 channels = res;
             }
         );
@@ -210,6 +224,7 @@ class DataManager {
         let osu_id;
         await DataManager.database.fast("SELECT osu_id FROM osu_user WHERE username=?",[name]).then(
             (res) => {
+                if(res == undefined) return;
                 if(res[0] != undefined)
                     osu_id = res[0]["osu_id"];
             }

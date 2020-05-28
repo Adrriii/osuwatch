@@ -64,7 +64,7 @@ class NotifMessage {
 
         const toMinSec = (s)=>{return(s-(s%=60))/60+(9<s?':':':0')+s};
         
-        this.lines = "`Song length: " + toMinSec(this.meta["total_length"]) + "` ";
+        this.lines = "`Song length: " + toMinSec(this.meta["length"]) + "` ";
         
         this.lines += "\n[`Download`](https://osu.ppy.sh/d/" + this.meta["beatmapset_id"] + ") [`osu!direct`](osu://dl/" + this.meta["beatmapset_id"] + ")";
         this.lines += "\n\n";
@@ -99,7 +99,7 @@ class NotifMessage {
     }
 
     async init(dm, beatmapset_id) {
-        await dm.getBeatmapSet(beatmapset_id).then(async  (beatmaps) => {
+        await dm.getBeatmapSet(beatmapset_id).then(async (beatmaps) => {
             await dm.getOsuID(beatmaps[0]["creator"]).then( (userid) => {
                 this.beatmaps = beatmaps;
                 this.userid = userid;
@@ -110,6 +110,33 @@ class NotifMessage {
     }
 
     setForChannel(channel_db) {
+        const modeToString = (mode) => { // will refactor someday. matches db fields ;o
+            switch(mode) {
+                case 0:
+                    return "std";
+                case 1:
+                    return "taiko";
+                case 2:
+                    return "ctb";
+                case 3:
+                    return "mania";
+            }
+        }
+
+        let want = false;
+        for(let i = 0; i < this.beatmaps.length; i++) {
+            let diff = this.beatmaps[i];
+
+            if (channel_db[modeToString(diff["mode"])] == 1) { // spooky
+                want = true;
+            }
+        }
+
+        if(!want) {
+            this.canceled = true;
+            return;
+        }
+
         this.embed.setColor(channel_db["color"]);
         
         if (this.loved) {

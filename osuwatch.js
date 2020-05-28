@@ -9,6 +9,7 @@ const NotifMessage = require('./src/NotifMessage');
 
 let dm = new DataManager();
 
+let TEST = true;
 let running = true;
 
 const userconsole = readline.createInterface({
@@ -54,6 +55,8 @@ const usercommand = async (command) => {
 }
 
 const sendNotif = async (nextPush, loved = false, test = false) => {
+  if(TEST) test = true;
+
   let notifMessage = new NotifMessage();
 
   await notifMessage.init(dm,nextPush);
@@ -69,6 +72,8 @@ const notifChannel = async (notifMessage, channel) => {
   let notif = new NotifMessage();
   notif.import(notifMessage);
   notif.setForChannel(channel);
+
+  if(notif.canceled) return;
   
   client.channels.fetch(channel["channel"]).then( (disc_channel) => {
 
@@ -83,17 +88,17 @@ const notifChannel = async (notifMessage, channel) => {
 }
 
 const rankedcheck = async () => {
-  await dm.checkRankedBeatmap().then((nextPush) => {
-      if (nextPush) {
-          //await dm.deleteRankedBeatmapQueue(nextPush);
-          sendNotif(nextPush, false, true);
-      }
+  await dm.checkRankedBeatmap().then(async (nextPush) => {
+    if (nextPush != undefined) {
+      await dm.deleteRankedBeatmapQueue(nextPush);
+      sendNotif(nextPush);
+    }
   });
 
-  await dm.checkLovedBeatmap().then((nextLovedPush) => {
-    if (nextLovedPush) {
-        //await dm.deleteLovedBeatmapQueue(nextLovedPush);
-        sendNotif(nextLovedPush, true, true);
+  await dm.checkLovedBeatmap().then(async (nextLovedPush) => {
+    if (nextLovedPush != undefined) {
+      await dm.deleteLovedBeatmapQueue(nextLovedPush);
+      sendNotif(nextLovedPush, true);
     }
   });
 }
@@ -103,7 +108,7 @@ client.on('ready', () => {
 
   userconsole.question('> ', usercommand);
 
-  //setTimeout(rankedcheck,5000);
+  setInterval(rankedcheck,5000);
 });
 
 client.on('message', msg => {

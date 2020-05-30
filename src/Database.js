@@ -19,17 +19,11 @@ class Database {
                  host: config.get("db.host"), 
                  user: config.get("db.user"), 
                  password: config.get("db.pass"),
-                 connectionLimit: 1
+                 database: config.get("db.dbname"),
+                 connectionLimit: 5
             });
 
-            await pool.getConnection()
-            .then(conn => {
-            
-                conn.query("use "+config.get("db.dbname"));
-              console.log("Connected to database "+config.get("db.dbname"));
-              this.db = conn;
-                
-            })
+            this.db = pool;
             
             this.online = true;
             return true;
@@ -47,12 +41,11 @@ class Database {
             return false;
         }
         try {
-            
             await this.db.query(sql, opt).then(
                 (res) => {
                     if(res == undefined) return;
                     if(res[0] == undefined) return;
-                    if(res[0].hasOwnProperty("res") && res[0].res == null) return; // idfk but it doesn't crash this way
+                    if(res[0].hasOwnProperty("res") && res[0].res === null) return; // idfk but it doesn't crash this way
                     this.result = res;
                 }
             )
@@ -76,6 +69,7 @@ class Database {
     }
 
     async fast(sql, opt = null, i = null){
+        this.result = null;
         await this.query(sql, opt);
         return this.getResult(i);
     }

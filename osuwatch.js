@@ -80,11 +80,9 @@ const notifChannel = async (notifMessage, channel) => {
   client.channels.fetch(channel["channel"]).then( (disc_channel) => {
 
     disc_channel.send(notif.embed).catch( (e) => {
-      console.log("Failed to notify channel, "+e);
     });
 
   }).catch( (e) => {
-    console.log("Could not notify "+channel["channel"]+", "+e);
   });
   
 }

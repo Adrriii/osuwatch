@@ -18,6 +18,9 @@ class CommandHandler {
             case "help":
                 ret = new Commands.Help();
                 break;
+            case "link":
+                ret = new Commands.Link();
+                break;
             case "add":
                 ret = new Commands.Add();
                 break;

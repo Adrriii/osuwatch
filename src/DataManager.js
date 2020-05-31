@@ -81,6 +81,46 @@ class DataManager {
         return ret;
     }
 
+    async linkDiscord(user_discord_id, code) {
+        let info = null;
+        
+        await DataManager.database.fast("SELECT osu_id,username FROM watch_user WHERE id = ?", [code]).then( (rep) => {
+            if(rep != undefined) {
+                info = rep[0];
+            } else {
+                info = false;
+            }
+        });
+
+        if(info != false) {
+            await DataManager.database.fast("UPDATE watch_user SET id = ? WHERE id = ?", [user_discord_id, code]);
+        }
+
+        return info;
+    }
+
+    async isVerified(member) {
+        let ret = undefined;  
+        
+        // Check if in our users
+        await DataManager.database.fast("SELECT * FROM watch_user as u WHERE u.id = ?", [member.id]).then( (rep) => {
+            if(rep == undefined) ret = false;
+        });
+
+        if(ret != undefined && ret == false) return ret;
+        
+        // Check if active
+        await DataManager.database.fast("SELECT consec_fail FROM osu_last as l, watch_user as u, osu_user as ou WHERE consec_fail>2 AND u.id = ? AND u.osu_id = ou.osu_id AND ou.id = l.id AND (SELECT selectedmods FROM osu_user as u, watch_user as w WHERE w.id = ? AND w.osu_id = u.osu_id) LIKE l.mode ORDER BY consec_fail ASC LIMIT 1", [member.id,member.id]).then( (rep) => {
+            if(rep == undefined) ret = true;
+        });
+
+        if(ret != undefined && ret == false) return ret;
+
+        ret = true;
+
+        return ret;
+    }
+
     async removeTrackedChannel(channel_id) {
         let ret = false;  
         

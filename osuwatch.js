@@ -12,7 +12,7 @@ let dm = new DataManager();
 let TEST = config.has("config.env") && config.get("config.env") != "prod"; // test unless prod
 let running = true;
 
-const userconsole = readline.createInterface({
+const serverconsole = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
@@ -27,7 +27,9 @@ if(token == "BOT_TOKEN") {
   throw("Please configure the discord bot token in 'config/default.json'");
 }
 
-const usercommand = async (command) => {
+const consolecommand = async (command) => {
+  // These commands are different from the actual discord user commands
+  // They are the console commands
   switch(command) {
     case "help":
       console.log("Commands are not yet implemented, except for 'exit'.");
@@ -47,7 +49,7 @@ const usercommand = async (command) => {
   }
 
   if(running) {
-    userconsole.question('> ', usercommand);
+    serverconsole.question('> ', consolecommand);
   } else {
     console.log("Goodbye!");
     process.exit();
@@ -88,6 +90,8 @@ const notifChannel = async (notifMessage, channel) => {
 }
 
 const rankedcheck = async () => {
+  if(TEST) return; // Do not interact with the prod bot
+
   await dm.checkRankedBeatmap().then(async (nextPush) => {
     if (nextPush != undefined) {
       await dm.deleteRankedBeatmapQueue(nextPush);
@@ -106,7 +110,7 @@ const rankedcheck = async () => {
 client.on('ready', () => {
   console.log("Logged in as "+client.user.tag + ((!TEST) ? " in PRODUCTION mode !" : " in test mode"));
 
-  userconsole.question('> ', usercommand);
+  serverconsole.question('> ', consolecommand);
 
   setInterval(rankedcheck,5000);
 });

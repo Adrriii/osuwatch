@@ -9,48 +9,43 @@ function sleep(ms) {
 class Database {
 
     constructor(){
+        const config = require('config');
+
+        if(!config.has("db")) {
+          throw("Please fill the db configs!");
+        }
+            
+        const mariadb = require('mariadb');
+        this.db = mariadb.createPool({
+             host: config.get("db.host"), 
+             user: config.get("db.user"), 
+             password: config.get("db.pass"),
+             database: config.get("db.dbname"),
+             connectionLimit: 5
+        });
+
         this.reconnect();
     }
     
     async reconnect() {
-        try {
-            const config = require('config');
 
-            if(!config.has("db")) {
-              throw("Please fill the db configs!");
-            }
-
-            console.log("Database reached");
-            
-            const mariadb = require('mariadb');
-            const pool = mariadb.createPool({
-                 host: config.get("db.host"), 
-                 user: config.get("db.user"), 
-                 password: config.get("db.pass"),
-                 database: config.get("db.dbname"),
-                 connectionLimit: 5
-            });
-
-            this.db = pool;
-            
-            this.online = true;
-
-            return true;
-        } catch(e){
-            console.log("Error "+e);
-            this.online = false;
-
-            this.db.end()
-            .then(() => {
-                console.log("Ended pool");
+        await this.db.getConnection()
+            .then(conn => {
+                console.log("Database reached");
+                
+                this.online = true;
             })
             .catch(err => {
-                console.log("Could not end pool pool : "+err);
+                console.log("Error "+err);
+                this.online = false;
             });
 
+        if(!this.online) {
             await sleep(10000); // Prevent from crashing database
-            return false;
         }
+
+        return this.online;
+        
     }
 
     async query(sql, opt = null){

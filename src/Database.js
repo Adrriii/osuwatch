@@ -1,5 +1,11 @@
 'use strict';
 
+function sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }  
+
 class Database {
 
     constructor(){
@@ -13,6 +19,8 @@ class Database {
             if(!config.has("db")) {
               throw("Please fill the db configs!");
             }
+
+            console.log("Database reached");
             
             const mariadb = require('mariadb');
             const pool = mariadb.createPool({
@@ -26,10 +34,21 @@ class Database {
             this.db = pool;
             
             this.online = true;
+
             return true;
         } catch(e){
             console.log("Error "+e);
             this.online = false;
+
+            this.db.end()
+            .then(() => {
+                console.log("Ended pool");
+            })
+            .catch(err => {
+                console.log("Could not end pool pool : "+err);
+            });
+
+            await sleep(10000); // Prevent from crashing database
             return false;
         }
     }

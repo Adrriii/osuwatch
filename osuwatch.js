@@ -13,8 +13,11 @@ const NotifMessage = require('./src/NotifMessage');
 const JoiningMessage = require('./src/JoiningMessages/JoiningMessage');
 const JoiningMessages = requireDir('./src/JoiningMessages');
 
+const MonitorMessage = require("./src/MonitorMessage");
+
 let dm = new DataManager(client);
 let um;
+let mm;
 
 let TEST = config.has("config.env") && config.get("config.env") != "prod"; // test unless prod
 let running = true;
@@ -127,6 +130,7 @@ const joinCheck = async () => {
 const heartbeat = () => {
 	joinCheck();
 	um.checkUsersRoles();
+	mm.update();
 };
 
 const refresh = () => {
@@ -140,6 +144,8 @@ client.on('ready', () => {
 		um = new UserManager(client, dm, guild);
 		refresh();
 	});
+
+	mm = new MonitorMessage(client, dm);
 
 	serverconsole.question('> ', consolecommand);
 

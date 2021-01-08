@@ -317,6 +317,10 @@ class DataManager {
         return DataManager.database.fast("SELECT u.osu_id as osu_id, w.id as discord_id, hourly, sub_date, u.username as username FROM watch_user as w, osu_user as u WHERE w.id = ? AND w.osu_id = u.osu_id",[discord_id]);
     }
 
+    async getMonitorLog() {
+        return DataManager.database.fast("SELECT * FROM watch_monitor_log",null,0);
+    }
+
 }
 
 module.exports = DataManager;

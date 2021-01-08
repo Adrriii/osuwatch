@@ -2,11 +2,13 @@
 
 class DataManager {
 
-    constructor() {
+    constructor(client) {
+        this.client = client;
+
         if(DataManager.database == null) {
             const Database = require("./Database.js");
             
-            DataManager.database = new Database();
+            DataManager.database = new Database(this.client);
         }
     }
     
@@ -301,6 +303,18 @@ class DataManager {
         })
 
         return userid;
+    }
+    
+    async getNewUser() {
+        return DataManager.database.fast("SELECT * FROM watch_new_user LIMIT 1",null,0);
+    }
+    
+    async removeNewUser(username) {
+        return DataManager.database.fast("DELETE FROM watch_new_user WHERE username = ?",[username]);
+    }
+    
+    async getOsuMember(discord_id) {
+        return DataManager.database.fast("SELECT u.osu_id as osu_id, w.id as discord_id, hourly, sub_date, u.username as username FROM watch_user as w, osu_user as u WHERE w.id = ? AND w.osu_id = u.osu_id",[discord_id]);
     }
 
 }

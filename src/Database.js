@@ -1,4 +1,5 @@
 'use strict';
+const Discord = require('discord.js');
 
 function sleep(ms) {
     return new Promise((resolve) => {
@@ -8,7 +9,9 @@ function sleep(ms) {
 
 class Database {
 
-    constructor(){
+    constructor(client){
+        this.client = client;
+        
         const config = require('config');
 
         if(!config.has("db")) {
@@ -66,20 +69,36 @@ class Database {
 
             return true;
         } catch(e){
-            console.log("Failed "+e);
-            this.reconnect();
-            return false;
+            console.log("Failed :\n"+e);
+
+            let embed = new Discord.MessageEmbed();
+    
+            embed.setColor(15419709);
+            
+            embed.setTitle("Ooops!");
+    
+            embed.setDescription("I think the database just died ... Adri do something!");
+        
+            this.client.channels.fetch(config.main_server.main_channel).then( (disc_channel) => {
+                disc_channel.send(embed)
+                .catch(e => reject(e))
+                .then(m => resolve());  
+            }).catch(e => reject(e));
+                    
+            process.exit();
         }
     }
 
     getResult(i = null){
+        let ret = false;
         if(i == null){
-            return this.result;
+            ret = this.result;
         }
-        if(this.result[i] != undefined){
-            return this.result[i];
+        if(this.result && this.result[i] != undefined){
+            ret = this.result[i];
         }
-        return false;
+        this.result = null;
+        return ret;
     }
 
     async fast(sql, opt = null, i = null){

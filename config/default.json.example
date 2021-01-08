@@ -17,6 +17,13 @@
     },
     "main_server": {
         "id": "server_id",
-        "verified_role": "role_id"
+        "user" : "role_id",
+        "donor" : "role_id",
+        "senior" : "role_id",
+        "log_channel" : "role_id",
+        "joining_channel" : "role_id",
+        "monitoring_channel" : "role_id",
+        "monitoring_message" : "role_id",
+        "main_channel" : "role_id"
     }
 }

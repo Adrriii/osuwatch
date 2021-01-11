@@ -11,6 +11,7 @@ class Database {
 
     constructor(client){
         this.client = client;
+        this.consec_fail = 0;
         
         const config = require('config');
 
@@ -67,9 +68,15 @@ class Database {
                 }
             )
 
+            this.consec_fail = 0;
             return true;
         } catch(e){
             console.log("Failed :\n"+e);
+            this.consec_fail++;
+
+            if(this.consec_fail<10) return;
+
+            const config = require('config');
 
             let embed = new Discord.MessageEmbed();
     
@@ -82,10 +89,10 @@ class Database {
             this.client.channels.fetch(config.main_server.main_channel).then( (disc_channel) => {
                 disc_channel.send(embed)
                 .catch(e => reject(e))
-                .then(m => resolve());  
+                .then(m => {
+                    process.exit();
+                });  
             }).catch(e => reject(e));
-                    
-            process.exit();
         }
     }
 

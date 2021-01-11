@@ -10,7 +10,7 @@ class Link extends Command {
 
         const config = require('config');
 
-        if(!config.has("main_server.id") || !config.has("main_server.verified_role")) {
+        if(!config.has("main_server.id") || !config.has("main_server.user")) {
             this.reply(msg, "osu! account linking has not been set up");
             return;
         }
@@ -39,7 +39,7 @@ class Link extends Command {
                 await this.dm.isVerified(msg.author).then( (is_verified) => {
 
                     if(is_verified) {
-                        msg.member.roles.add(config.get("main_server.verified_role")).catch(() => {});
+                        msg.member.roles.add(config.get("main_server.user")).catch(() => {});
                         msg.member.setNickname(info["username"]).catch(() => {}); // Sucks having to silence like that
 
                         append = ", and you were successfuly verified!";

@@ -14,7 +14,7 @@ class Add extends Command {
             }else{
                 this.reply(msg,"This channel already has notifications! (╯°□°）╯︵ ┻━┻");
             }
-        })
+        }).catch(console.error);
     }
 
     requires_admin() {

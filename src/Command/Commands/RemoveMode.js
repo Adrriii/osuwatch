@@ -41,32 +41,32 @@ class RemoveMode extends Command {
 
                 switch(parsed) {
                     case 0:
-                        this.dm.trackModeChannel(channel_id,"std",0);
+                        this.dm.trackModeChannel(channel_id,"std",0).catch(console.error);
                         this.reply(msg,"Standard is no longer a tracked mode");
                         break;
                     case 1:
-                        this.dm.trackModeChannel(channel_id,"taiko",0);
+                        this.dm.trackModeChannel(channel_id,"taiko",0).catch(console.error);
                         this.reply(msg,"Taiko is no longer a tracked mode");
                         break;
                     case 2:
-                        this.dm.trackModeChannel(channel_id,"ctb",0);
+                        this.dm.trackModeChannel(channel_id,"ctb",0).catch(console.error);
                         this.reply(msg,"Catch The Beat is no longer a tracked mode");
                         break;
                     case 3:
-                        this.dm.trackModeChannel(channel_id,"mania",0);
+                        this.dm.trackModeChannel(channel_id,"mania",0).catch(console.error);
                         this.reply(msg,"Mania is no longer a tracked mode");
                         break;
                     default:
                         this.reply(msg,"Something went wrong");
                 }
             } else {
-                this.dm.trackModeChannel(channel_id,"std",0);
-                this.dm.trackModeChannel(channel_id,"taiko",0);
-                this.dm.trackModeChannel(channel_id,"ctb",0);
-                this.dm.trackModeChannel(channel_id,"mania",0);
+                this.dm.trackModeChannel(channel_id,"std",0).catch(console.error);
+                this.dm.trackModeChannel(channel_id,"taiko",0).catch(console.error);
+                this.dm.trackModeChannel(channel_id,"ctb",0).catch(console.error);
+                this.dm.trackModeChannel(channel_id,"mania",0).catch(console.error);
                 this.reply(msg,"Ok, no mode will be tracked :(");
             }
-        });
+        }).catch(console.error);
     }
 
     requires_admin() {

@@ -16,11 +16,11 @@ class RemoveLoved extends Command {
                     }else{
                         this.reply(msg,"This channel is not even tracking loved maps yet =.=");
                     }
-                })
+                }).catch(console.error);
             } else {
                 this.reply(msg,"This channel is not even receiving notifications in the first place ...");
             }
-        });
+        }).catch(console.error);
     }
 
     requires_admin() {

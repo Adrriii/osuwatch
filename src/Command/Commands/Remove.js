@@ -14,7 +14,7 @@ class Remove extends Command {
             }else{
                 this.reply(msg,"This channel is not even tracked yet =.=");
             }
-        })
+        }).catch(console.error);
     }
 
     requires_admin() {

@@ -41,32 +41,32 @@ class AddMode extends Command {
 
                 switch(parsed) {
                     case 0:
-                        this.dm.trackModeChannel(channel_id,"std",1);
+                        this.dm.trackModeChannel(channel_id,"std",1).catch(console.error);
                         this.reply(msg,"Standard is now a tracked mode");
                         break;
                     case 1:
-                        this.dm.trackModeChannel(channel_id,"taiko",1);
+                        this.dm.trackModeChannel(channel_id,"taiko",1).catch(console.error);
                         this.reply(msg,"Taiko is now a tracked mode");
                         break;
                     case 2:
-                        this.dm.trackModeChannel(channel_id,"ctb",1);
+                        this.dm.trackModeChannel(channel_id,"ctb",1).catch(console.error);
                         this.reply(msg,"Catch The Beat is now a tracked mode");
                         break;
                     case 3:
-                        this.dm.trackModeChannel(channel_id,"mania",1);
+                        this.dm.trackModeChannel(channel_id,"mania",1).catch(console.error);
                         this.reply(msg,"Mania is now a tracked mode");
                         break;
                     default:
                         this.reply(msg,"Something went wrong");
                 }
             } else {
-                this.dm.trackModeChannel(channel_id,"std",1);
-                this.dm.trackModeChannel(channel_id,"taiko",1);
-                this.dm.trackModeChannel(channel_id,"ctb",1);
-                this.dm.trackModeChannel(channel_id,"mania",1);
+                this.dm.trackModeChannel(channel_id,"std",1).catch(console.error);
+                this.dm.trackModeChannel(channel_id,"taiko",1).catch(console.error);
+                this.dm.trackModeChannel(channel_id,"ctb",1).catch(console.error);
+                this.dm.trackModeChannel(channel_id,"mania",1).catch(console.error);
                 this.reply(msg,"All modes are now tracked");
             }
-        });
+        }).catch(console.error);
     }
 
     requires_admin() {

@@ -16,11 +16,11 @@ class AddLoved extends Command {
                     }else{
                         this.reply(msg,"This channel already has loved notifications! (╯°□°）╯︵ ┻━┻");
                     }
-                })
+                }).catch(console.error);
             } else {
                 this.reply(msg,"You need to enable notifications in order to enable loved maps!");
             }
-        });
+        }).catch(console.error);
     }
 
     requires_admin() {

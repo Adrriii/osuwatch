@@ -31,7 +31,7 @@ class SetUTC extends Command {
             }else{
                 this.reply(msg,"Something went wrong, is this channel tracked ?");
             }
-        })
+        }).catch(console.error);
     }
 
     requires_admin() {

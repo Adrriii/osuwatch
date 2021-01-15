@@ -100,19 +100,27 @@ const notifChannel = async (notifMessage, channel) => {
 const rankedCheck = async () => {
 	if(TEST) return; // Do not interact with the prod bot
 
+	let started = null;
 	await dm.checkRankedBeatmap().then(async (nextPush) => {
+		if(started == nextPush) return;
 		if (nextPush != undefined) {
+			started = nextPush;
 			await dm.deleteRankedBeatmapQueue(nextPush);
-			sendNotif(nextPush);
+			await sendNotif(nextPush);
+			started = null;
 		}
-	});
+	}).catch(console.error);
 
+	started = null;
 	await dm.checkLovedBeatmap().then(async (nextLovedPush) => {
+		if(started == nextLovedPush) return;
 		if (nextLovedPush != undefined) {
+			started = nextLovedPush;
 			await dm.deleteLovedBeatmapQueue(nextLovedPush);
-			sendNotif(nextLovedPush, true);
+			await sendNotif(nextLovedPush, true);
+			started = null;
 		}
-	});
+	}).catch(console.error);
 }
 
 const joinCheck = async () => {
@@ -124,7 +132,7 @@ const joinCheck = async () => {
 				dm.removeNewUser(r.username);
 			}).catch(console.error);
 		}
-	});
+	}).catch(console.error);
 }
 
 const heartbeat = () => {

@@ -105,8 +105,8 @@ class NotifMessage {
                 this.userid = userid;
 
                 this.initCached();
-            })
-        });
+            }).catch(console.error);
+        }).catch(console.error);
     }
 
     setForChannel(channel_db) {

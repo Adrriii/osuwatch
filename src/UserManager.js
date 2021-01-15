@@ -103,7 +103,7 @@ class UserManager {
                         await user.changeNickname(user.username).catch(console.error);
                     }
                 }
-            });
+            }).catch(console.error);
         }
 
         this.working = false;

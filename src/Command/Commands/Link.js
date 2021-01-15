@@ -44,13 +44,13 @@ class Link extends Command {
 
                         append = ", and you were successfuly verified!";
                     }
-                });
+                }).catch(console.error);
                 
                 this.reply(msg, "Your discord account has been linked with https://osu.ppy.sh/users/"+info["osu_id"]+append);
             } else {
                 this.reply(msg, "This code couldn't be found. Get yours at https://osudaily.net/link.php");
             }
-        });
+        }).catch(console.error);
     }
 
     requires_admin() {

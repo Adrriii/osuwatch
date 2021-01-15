@@ -37,7 +37,7 @@ class TrackedModes extends Command {
             } else {
                 this.reply(msg,"This channel is not tracked. That means it won't received notifications. At all. What did you expect ?");
             }
-        });
+        }).catch(console.error);
     }
 
     requires_admin() {

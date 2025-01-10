@@ -19,7 +19,8 @@ let dm = new DataManager(client);
 let um;
 let mm;
 
-let TEST = config.has("config.env") && config.get("config.env") != "prod"; // test unless prod
+let TEST = config.has("config.env") && config.get("config.env") != "prod" && config.get("config.env") != "prod-headless"; // test unless prod
+let HEADLESS = config.has("config.env") && config.get("config.env") === "prod-headless";
 let running = true;
 
 const serverconsole = readline.createInterface({
@@ -155,7 +156,9 @@ client.on('ready', () => {
 
 	mm = new MonitorMessage(client, dm);
 
-	serverconsole.question('> ', consolecommand);
+	if(!HEADLESS) {
+		serverconsole.question('> ', consolecommand);
+	}
 
 	setInterval(rankedCheck,5000);
 	setInterval(heartbeat,3000);

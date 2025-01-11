@@ -39,6 +39,7 @@ class UserManager {
         await this.refreshUsers();
 	
         for(let user_id in this.users) {
+			if(user_id == '217361209450692618') continue;
             let user = this.users[user_id];
             await this.dm.getOsuMember(user.id).then(async osu_user => {
 

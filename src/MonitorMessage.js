@@ -21,6 +21,8 @@ class MonitorMessage {
             await this.addRamField();
             await this.addSpaceField();
             await this.addCpuField();
+
+			this.embed.timestamp = new Date().toISOString();
     
             if(this.message)
                 this.message.edit("",this.embed);

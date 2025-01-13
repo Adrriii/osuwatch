@@ -1,6 +1,7 @@
 'use strict';
                 
 const Discord = require('discord.js');
+const modeToString = require('./osu/modeToString.js');
 
 class NotifMessage {
 
@@ -66,7 +67,7 @@ class NotifMessage {
         
         this.lines = "`Song length: " + toMinSec(this.meta["length"]) + "` ";
         
-        this.lines += "\n[`Download`](https://osu.ppy.sh/d/" + this.meta["beatmapset_id"] + ") [`osu!direct`](osu://dl/" + this.meta["beatmapset_id"] + ")";
+        this.lines += "\n[`Download`](https://osu.ppy.sh/d/" + beatmapset_id + ") [`osu!direct`](https://osudaily.net/osudirect.php?" + beatmapset_id + ")";
         this.lines += "\n\n";
 
         for(let i = 0; i < this.beatmaps.length; i++) {
@@ -109,34 +110,37 @@ class NotifMessage {
         }).catch(console.error);
     }
 
-    setForChannel(channel_db) {
-        const modeToString = (mode) => {
-            switch(mode) {
-                case 0:
-                    return "std";
-                case 1:
-                    return "taiko";
-                case 2:
-                    return "ctb";
-                case 3:
-                    return "mania";
-            }
-        }
+	checkKeyFilterBlock(channel_db) {
+		// Cannot block if no key filter
+		if(channel_db['keyfilter'] == 0) return false;
 
-        let want = false;
+        for(let i = 0; i < this.beatmaps.length; i++) {
+            let diff = this.beatmaps[i];
+			// If the mode is not mania and it's tracked, we want the notification
+			if (diff["mode"] != 3 && channel_db[modeToString(diff["mode"])] == 1) {
+				return false;
+			}
+			// If the keyfilter is the same as the diff size, we want the notification
+			if (diff["mode"] == 3 && (channel_db['keyfilter'] == diff["diff_size"])) {
+				return false;
+			}
+		}
+		// The mode does not match, or there is no matching keymode
+		return true;
+	}
+
+    setForChannel(channel_db) {
+        let hasTrackedMode = false;
         for(let i = 0; i < this.beatmaps.length; i++) {
             let diff = this.beatmaps[i];
 
+			// If at least one mode is tracked, we want the notification
             if (channel_db[modeToString(diff["mode"])] == 1) {
-                want = true;
+                hasTrackedMode = true;
             }
         }
 
-		if(diff["mode"] == 3 && (channel_db["keyfilter"] != 0 && channel_db["keyfilter"] != diff["diff_size"])) {
-			want = false;
-		}
-
-        if(!want) {
+        if(!hasTrackedMode || this.checkKeyFilterBlock(channel_db)) {
             this.canceled = true;
             return;
         }

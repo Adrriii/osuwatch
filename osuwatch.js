@@ -53,7 +53,7 @@ const consolecommand = async (command) => {
 			await dm.test();
 			break;
 		case "test":
-			await sendNotif(347650, false, true);
+			await sendNotif(2260384, false, true);
 			break;
 		default:
 			console.log("Unknown command. Type 'help' for a list of commands.");

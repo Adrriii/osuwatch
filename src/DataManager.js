@@ -231,7 +231,7 @@ class DataManager {
     }
     
     trackModeChannel(channel_id,mode,state) {
-        DataManager.database.fast("UPDATE watch_channels SET "+mode+"=? WHERE channel=?",[state,channel_id]);
+        return DataManager.database.fast("UPDATE watch_channels SET "+mode+"=? WHERE channel=?",[state,channel_id]);
     }
     
     async getBeatmapSet(beatmapset_id) {

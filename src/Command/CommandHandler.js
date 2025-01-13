@@ -48,6 +48,9 @@ class CommandHandler {
             case "setutc":
                 ret = new Commands.SetUTC();
                 break;
+            case "keyfilter":
+                ret = new Commands.SetKeyfilter();
+                break;
             default:
                 ret = new Commands.Undefined();
         }

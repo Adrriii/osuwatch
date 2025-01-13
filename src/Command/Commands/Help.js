@@ -14,6 +14,7 @@ class Help extends Command {
         + "\n`ow setutc` Changes the UTC for this channel (default is 0)"
         + "\n`ow setlang` Changes the language (0: English, 1: French)"
         + "\n`ow addmode n` Enable notifications for a specific mode 'n'"
+        + "\n`ow keyfilter k` Filter mania notifications to a specific keymode 'k' ('all', or from 1 to 18)"
         + "\n`ow rmmode n` Disable notifications for a specific mode 'n'\n(0=std, 1=taiko, 2=ctb, 3=mania, all=all modes)");
     }
 

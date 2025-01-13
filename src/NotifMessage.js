@@ -110,7 +110,7 @@ class NotifMessage {
     }
 
     setForChannel(channel_db) {
-        const modeToString = (mode) => { // will refactor someday. matches db fields ;o
+        const modeToString = (mode) => {
             switch(mode) {
                 case 0:
                     return "std";
@@ -127,10 +127,14 @@ class NotifMessage {
         for(let i = 0; i < this.beatmaps.length; i++) {
             let diff = this.beatmaps[i];
 
-            if (channel_db[modeToString(diff["mode"])] == 1) { // spooky
+            if (channel_db[modeToString(diff["mode"])] == 1) {
                 want = true;
             }
         }
+
+		if(diff["mode"] == 3 && (channel_db["keyfilter"] != 0 && channel_db["keyfilter"] != diff["diff_size"])) {
+			want = false;
+		}
 
         if(!want) {
             this.canceled = true;

@@ -301,13 +301,24 @@ class DataManager {
                 }
     
                 const fetch = require('node-fetch');
-                let url = "https://osu.ppy.sh/api/get_user?k="+config.get("osu.api_key")+"&u="+username+"&type=string";
-                let settings = { method: "Get" };
-    
+                // Via the local osu! API broker: one Cloudflare per-IP budget is
+                // shared by every osu! project on this host, so nothing calls
+                // osu! directly. See /main/osu/farm/osu_api.
+                let url = "http://127.0.0.1:7654/api/get_user?k="+config.get("osu.api_key")+"&u="+username+"&type=string";
+                // Someone is waiting on a Discord reply, so this queues ahead of
+                // the bulk jobs but behind the score collector.
+                let settings = { method: "Get", headers: { "X-Osu-Priority": "interactive", "User-Agent": "osu-watch/1.0", "X-Scheduler-Token": "fej1e7FMa6KGPm0XAG7c9sLpJdRMNYCkYlUg7tJ6UY" } };
+
                 await fetch(url, settings)
                     .then(async (res) => {
+                        if (res.headers.get("x-broker-error")) {
+                            // Never reached osu!: leave userid unset rather than
+                            // record a lookup failure as "no such user".
+                            console.log("osu! API not delivered: " + res.headers.get("x-broker-error"));
+                            return;
+                        }
                         await res.json().then((decode) => {
-                            userid = decode[0]["user_id"];
+                            if (decode && decode[0]) userid = decode[0]["user_id"];
                         });
                     });
             } else {
